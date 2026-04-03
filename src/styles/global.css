@@ -1,0 +1,331 @@
+:root {
+  color-scheme: light;
+  --bg: #edf3eb;
+  --bg-accent: rgba(128, 149, 109, 0.18);
+  --panel: rgba(255, 255, 250, 0.88);
+  --panel-strong: rgba(250, 248, 240, 0.95);
+  --border: rgba(42, 55, 39, 0.14);
+  --text: #1f2a20;
+  --muted: #596757;
+  --accent: #6b8144;
+  --accent-strong: #384f1b;
+  --danger: #8b4c37;
+  --shadow: 0 18px 48px rgba(34, 48, 33, 0.08);
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(160, 180, 132, 0.32), transparent 32rem),
+    linear-gradient(180deg, #f7faf4 0%, var(--bg) 55%, #e7ede3 100%);
+  color: var(--text);
+}
+
+body {
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+select,
+input {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+}
+
+button {
+  cursor: pointer;
+}
+
+code,
+pre {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.page-shell {
+  width: min(1180px, calc(100vw - 2rem));
+  margin: 0 auto;
+  padding: 1.25rem 0 4rem;
+}
+
+.site-header {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.75rem 0 1.5rem;
+}
+
+.site-mark {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+}
+
+.site-mark__eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.page-content {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.hero,
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+}
+
+.hero {
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -5rem -5rem auto;
+  width: 14rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(122, 152, 95, 0.32), transparent 70%);
+  pointer-events: none;
+}
+
+.hero__eyebrow {
+  display: inline-block;
+  margin-bottom: 0.85rem;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.hero h2,
+.section-title {
+  margin: 0;
+  line-height: 1.1;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.hero p {
+  max-width: 62ch;
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+}
+
+.meta-strip,
+.summary-grid,
+.control-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.meta-strip {
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  margin-top: 1.35rem;
+}
+
+.stat,
+.summary-card {
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+}
+
+.stat__label,
+.summary-card__label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stat__value,
+.summary-card__value {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.panel {
+  padding: 1.25rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+}
+
+.section-subtitle {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+thead th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 0.75rem;
+}
+
+tbody td {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid rgba(42, 55, 39, 0.08);
+  vertical-align: top;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ami-link {
+  color: var(--accent-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pill-link,
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+}
+
+.pill-link {
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.back-link {
+  color: var(--accent-strong);
+}
+
+.control-grid {
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.control {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.control label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.control input,
+.control select {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.7rem 0.85rem;
+}
+
+.summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
+.status-line {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.empty-state {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(107, 129, 68, 0.08);
+  color: var(--accent-strong);
+}
+
+.error-state {
+  color: var(--danger);
+}
+
+.mono {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(100vw - 1rem, 100%);
+    padding-top: 0.7rem;
+  }
+
+  .hero,
+  .panel {
+    padding: 1rem;
+  }
+
+  table {
+    min-width: 640px;
+  }
+}

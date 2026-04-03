@@ -1,0 +1,51 @@
+# Node / Astro
+node_modules/
+dist/
+.astro/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+!.env*.example
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Test / coverage artifacts
+coverage/
+*.lcov
+
+# Terraform / OpenTofu state and local overrides
+.terraform/
+.tofu/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform / OpenTofu variable files with local secrets
+*.tfvars
+*.tfvars.json
+terraform.tfvars
+terraform.tfvars.json
+
+# Terraform / OpenTofu plans and CLI outputs
+*.tfplan
+*.tfplan.*
+plan.out
+
+# Direnv
+.direnv/

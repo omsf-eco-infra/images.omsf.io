@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { KEY_PACKAGES } from "../lib/config";
+import { formatBuildDatetime, listAmiManifestRecords } from "../lib/ami-data";
+
+const amis = listAmiManifestRecords();
+---
+
+<BaseLayout title="Environment Viewer">
+  <section class="hero">
+    <span class="hero__eyebrow">Local Fixture Mode</span>
+    <h1>AMI lockfiles, keyed by date and environment.</h1>
+    <p>
+      Phase 1 is intentionally parser-free. The landing page is driven by a
+      checked-in manifest that mirrors the future D1 index and points to static
+      JSON artifacts for each environment/platform selection.
+    </p>
+    <div class="meta-strip">
+      <article class="stat">
+        <span class="stat__label">Sample AMIs</span>
+        <span class="stat__value">{amis.length}</span>
+      </article>
+      <article class="stat">
+        <span class="stat__label">Summary Environment</span>
+        <span class="stat__value">omsf</span>
+      </article>
+      <article class="stat">
+        <span class="stat__label">Summary Platform</span>
+        <span class="stat__value">linux-64</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">Available AMIs</h2>
+    <p class="section-subtitle">
+      The table is sorted newest-first and already uses the phase-1 manifest
+      contract.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Build date</th>
+            <th>AMI name</th>
+            <th>AMI ID</th>
+            {KEY_PACKAGES.map((packageName) => <th>{packageName}</th>)}
+            <th>Lockfile</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {amis.map((ami) => (
+            <tr>
+              <td>{formatBuildDatetime(ami.buildDatetime)}</td>
+              <td>
+                <a class="ami-link" href={`/amis/${ami.name}`}>
+                  {ami.name}
+                </a>
+              </td>
+              <td class="mono">{ami.amiId}</td>
+              {KEY_PACKAGES.map((packageName) => (
+                <td>{ami.keyPackages[packageName] ?? "—"}</td>
+              ))}
+              <td>
+                <a href={ami.lockfileUrl} download>
+                  Download
+                </a>
+              </td>
+              <td>
+                <a href={`/amis/${ami.name}`}>Open</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
