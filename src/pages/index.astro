@@ -1,74 +1,69 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { KEY_PACKAGES } from "../lib/config";
-import { formatBuildDatetime, listAmiManifestRecords } from "../lib/ami-data";
+import { SUMMARY_PACKAGES } from "../lib/config";
+import { formatTimestamp, listImageSummaries } from "../lib/image-data";
 
-const amis = listAmiManifestRecords();
+const images = listImageSummaries();
 ---
 
-<BaseLayout title="Environment Viewer">
+<BaseLayout title="Image Viewer">
   <section class="hero">
     <span class="hero__eyebrow">Local Fixture Mode</span>
-    <h1>AMI lockfiles, keyed by date and environment.</h1>
+    <h1>Published image builds, keyed by timestamp and package summary.</h1>
     <p>
-      Phase 1 is intentionally parser-free. The landing page is driven by a
-      checked-in manifest that mirrors the future D1 index and points to static
-      JSON artifacts for each environment/platform selection.
+      The landing page is driven by a checked-in global manifest that mirrors
+      the future D1 index and points to one image JSON file per image.
     </p>
     <div class="meta-strip">
       <article class="stat">
-        <span class="stat__label">Sample AMIs</span>
-        <span class="stat__value">{amis.length}</span>
+        <span class="stat__label">Sample Images</span>
+        <span class="stat__value">{images.length}</span>
       </article>
       <article class="stat">
-        <span class="stat__label">Summary Environment</span>
-        <span class="stat__value">omsf</span>
+        <span class="stat__label">Summary Packages</span>
+        <span class="stat__value">{SUMMARY_PACKAGES.length}</span>
       </article>
       <article class="stat">
-        <span class="stat__label">Summary Platform</span>
-        <span class="stat__value">linux-64</span>
+        <span class="stat__label">JSON Layers</span>
+        <span class="stat__value">3</span>
       </article>
     </div>
   </section>
 
   <section class="panel">
-    <h2 class="section-title">Available AMIs</h2>
+    <h2 class="section-title">Available Images</h2>
     <p class="section-subtitle">
-      The table is sorted newest-first and already uses the phase-1 manifest
+      The table is sorted newest-first and uses the simplified global manifest
       contract.
     </p>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Build date</th>
-            <th>AMI name</th>
+            <th>Timestamp</th>
+            <th>Image name</th>
             <th>AMI ID</th>
-            {KEY_PACKAGES.map((packageName) => <th>{packageName}</th>)}
-            <th>Lockfile</th>
+            <th>Docker image</th>
+            {SUMMARY_PACKAGES.map((packageName) => <th>{packageName}</th>)}
             <th>Details</th>
           </tr>
         </thead>
         <tbody>
-          {amis.map((ami) => (
+          {images.map((image) => (
             <tr>
-              <td>{formatBuildDatetime(ami.buildDatetime)}</td>
+              <td>{formatTimestamp(image.timestamp)}</td>
               <td>
-                <a class="ami-link" href={`/amis/${ami.name}`}>
-                  {ami.name}
+                <a class="image-link" href={`/images/${image.name}`}>
+                  {image.name}
                 </a>
               </td>
-              <td class="mono">{ami.amiId}</td>
-              {KEY_PACKAGES.map((packageName) => (
-                <td>{ami.keyPackages[packageName] ?? "—"}</td>
+              <td class="mono">{image.amiId}</td>
+              <td class="mono">{image.dockerImage}</td>
+              {SUMMARY_PACKAGES.map((packageName) => (
+                <td>{image.packageVersions[packageName] ?? "—"}</td>
               ))}
               <td>
-                <a href={ami.lockfileUrl} download>
-                  Download
-                </a>
-              </td>
-              <td>
-                <a href={`/amis/${ami.name}`}>Open</a>
+                <a href={`/images/${image.name}`}>Open</a>
               </td>
             </tr>
           ))}

@@ -1,0 +1,376 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SUMMARY_PACKAGES } from "../../lib/config";
+import {
+  buildEnvironmentIndex,
+  filterPackagesByName,
+  formatTimestamp,
+  listPlatformsForEnvironment,
+  listImageSummaries,
+  readEnvironmentFromUrl,
+  readImageFromUrl,
+  resolveDefaultEnvironment,
+} from "../../lib/image-data";
+import type { ImageSummary, InstalledPackage } from "../../lib/types";
+
+export function getStaticPaths() {
+  return listImageSummaries().map((imageSummary) => ({
+    params: { name: imageSummary.name },
+    props: { imageSummary },
+  }));
+}
+
+interface Props {
+  imageSummary: ImageSummary;
+}
+
+const { imageSummary } = Astro.props as Props;
+const image = await readImageFromUrl(imageSummary.imageJsonUrl);
+const defaultEnvironment = resolveDefaultEnvironment(image);
+
+if (!defaultEnvironment) {
+  throw new Error(`Image ${image.name} has no environment selections.`);
+}
+
+const initialEnvironmentData = await readEnvironmentFromUrl(
+  defaultEnvironment.environmentJsonUrl,
+);
+const environmentIndex = buildEnvironmentIndex(image);
+const initialPlatformOptions = listPlatformsForEnvironment(
+  image,
+  defaultEnvironment.name,
+);
+const clientConfig = {
+  initialEnvironment: defaultEnvironment,
+  environmentIndex,
+};
+const initialPackages = filterPackagesByName(initialEnvironmentData.packages, "");
+
+function packageField(value: string | null | undefined): string {
+  return value && value !== "" ? value : "—";
+}
+---
+
+<BaseLayout title={`Image ${image.name}`}>
+  <a class="back-link" href="/">← Back to image index</a>
+
+  <section class="hero">
+    <span class="hero__eyebrow">Image Detail</span>
+    <h1>{image.name}</h1>
+    <p>
+      Image metadata is loaded from a checked-in image JSON document, while
+      environment-specific package details are loaded from the linked
+      environment JSON file for the current selection.
+    </p>
+    <div class="meta-strip">
+      <article class="stat">
+        <span class="stat__label">Timestamp</span>
+        <span class="stat__value">{formatTimestamp(image.timestamp)}</span>
+      </article>
+      <article class="stat">
+        <span class="stat__label">AMI ID</span>
+        <span class="stat__value mono">{image.amiId}</span>
+      </article>
+      <article class="stat">
+        <span class="stat__label">Docker image</span>
+        <span class="stat__value mono">{image.dockerImage}</span>
+      </article>
+      <article class="stat">
+        <span class="stat__label">pixi.lock</span>
+        <span class="stat__value">
+          <a href={image.pixiLockUrl} download>
+            Download
+          </a>
+        </span>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">Environment controls</h2>
+    <p class="section-subtitle">
+      Environment and platform options are loaded from the image JSON file.
+    </p>
+    <div class="control-grid">
+      <div class="control">
+        <label for="environment-select">Environment</label>
+        <select id="environment-select">
+          {Object.keys(environmentIndex).map((environmentName) => (
+            <option
+              value={environmentName}
+              selected={environmentName === defaultEnvironment.name}
+            >
+              {environmentName}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div class="control">
+        <label for="platform-select">Platform</label>
+        <select id="platform-select">
+          {initialPlatformOptions.map((environment) => (
+            <option
+              value={environment.platform}
+              selected={environment.platform === defaultEnvironment.platform}
+            >
+              {environment.platform}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div class="control">
+        <label for="package-filter">Package name filter</label>
+        <input
+          id="package-filter"
+          type="search"
+          placeholder="Filter package names"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="link-row">
+      <a
+        class="pill-link"
+        id="environment-yaml-link"
+        href={initialEnvironmentData.environmentYamlUrl}
+        download
+      >
+        Download environment.yaml
+      </a>
+    </div>
+  </section>
+
+  <section class="summary-grid">
+    <article class="summary-card">
+      <span class="summary-card__label">Current environment</span>
+      <span class="summary-card__value" id="selection-label">
+        {defaultEnvironment.name} / {defaultEnvironment.platform}
+      </span>
+    </article>
+    <article class="summary-card">
+      <span class="summary-card__label">Package count</span>
+      <span class="summary-card__value" id="package-count">
+        {initialEnvironmentData.packages.length}
+      </span>
+    </article>
+    {SUMMARY_PACKAGES.map((packageName) => (
+      <article class="summary-card">
+        <span class="summary-card__label">{packageName}</span>
+        <span class="summary-card__value">
+          {image.packageVersions[packageName] ?? "—"}
+        </span>
+      </article>
+    ))}
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">Installed packages</h2>
+    <p class="status-line" id="package-status">
+      Showing {initialPackages.length} of {initialEnvironmentData.packages.length}
+      {" "}packages for {defaultEnvironment.name} / {defaultEnvironment.platform}.
+    </p>
+    <p class="empty-state" id="package-empty" hidden>
+      No packages match the current filter.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Package</th>
+            <th>Version</th>
+            <th>Build ID</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody id="package-table-body">
+          {initialPackages.map((pkg: InstalledPackage) => (
+            <tr>
+              <td>{pkg.name}</td>
+              <td>{pkg.version}</td>
+              <td>{packageField(pkg.buildId)}</td>
+              <td>{pkg.source}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script
+    is:inline
+    define:vars={{ clientConfig, initialEnvironmentData }}
+  >
+    const environmentSelect = document.querySelector("#environment-select");
+    const platformSelect = document.querySelector("#platform-select");
+    const packageFilter = document.querySelector("#package-filter");
+    const packageStatus = document.querySelector("#package-status");
+    const packageEmpty = document.querySelector("#package-empty");
+    const packageBody = document.querySelector("#package-table-body");
+    const packageCount = document.querySelector("#package-count");
+    const selectionLabel = document.querySelector("#selection-label");
+    const environmentYamlLink = document.querySelector("#environment-yaml-link");
+
+    if (
+      !(environmentSelect instanceof HTMLSelectElement) ||
+      !(platformSelect instanceof HTMLSelectElement) ||
+      !(packageFilter instanceof HTMLInputElement) ||
+      !(packageStatus instanceof HTMLParagraphElement) ||
+      !(packageEmpty instanceof HTMLParagraphElement) ||
+      !(packageBody instanceof HTMLTableSectionElement) ||
+      !(packageCount instanceof HTMLElement) ||
+      !(selectionLabel instanceof HTMLElement) ||
+      !(environmentYamlLink instanceof HTMLAnchorElement)
+    ) {
+      throw new Error("Image detail page controls could not be initialized.");
+    }
+
+    const environmentCache = new Map([
+      [clientConfig.initialEnvironment.environmentJsonUrl, initialEnvironmentData],
+    ]);
+    let currentEnvironmentRef = clientConfig.initialEnvironment;
+    let currentEnvironmentData = initialEnvironmentData;
+
+    function formatCell(value) {
+      return value && value !== "" ? value : "—";
+    }
+
+    function renderPlatformOptions(environmentName, selectedPlatform) {
+      const platformOptions = clientConfig.environmentIndex[environmentName] ?? [];
+      platformSelect.replaceChildren();
+
+      for (const option of platformOptions) {
+        const node = document.createElement("option");
+        node.value = option.platform;
+        node.textContent = option.platform;
+        node.selected = option.platform === selectedPlatform;
+        platformSelect.append(node);
+      }
+
+      if (!platformOptions.some((option) => option.platform === selectedPlatform)) {
+        platformSelect.value = platformOptions[0]?.platform ?? "";
+      }
+    }
+
+    function renderPackages() {
+      const query = packageFilter.value.trim().toLowerCase();
+      const packages =
+        query === ""
+          ? currentEnvironmentData.packages
+          : currentEnvironmentData.packages.filter((pkg) =>
+              pkg.name.toLowerCase().includes(query),
+            );
+
+      packageBody.replaceChildren();
+      packageEmpty.classList.remove("error-state");
+
+      if (packages.length === 0) {
+        packageEmpty.hidden = false;
+        packageEmpty.textContent =
+          query === ""
+            ? `No packages are available for ${currentEnvironmentRef.name} / ${currentEnvironmentRef.platform}.`
+            : `No packages match "${packageFilter.value.trim()}" in ${currentEnvironmentRef.name} / ${currentEnvironmentRef.platform}.`;
+        packageStatus.textContent = `Showing 0 of ${currentEnvironmentData.packages.length} packages for ${currentEnvironmentRef.name} / ${currentEnvironmentRef.platform}.`;
+        return;
+      }
+
+      packageEmpty.hidden = true;
+      packageStatus.textContent = `Showing ${packages.length} of ${currentEnvironmentData.packages.length} packages for ${currentEnvironmentRef.name} / ${currentEnvironmentRef.platform}.`;
+
+      for (const pkg of packages) {
+        const row = document.createElement("tr");
+        const values = [
+          pkg.name,
+          pkg.version,
+          formatCell(pkg.buildId),
+          pkg.source,
+        ];
+
+        for (const value of values) {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        }
+
+        packageBody.append(row);
+      }
+    }
+
+    function renderEnvironment(environmentRef, environmentData) {
+      currentEnvironmentRef = environmentRef;
+      currentEnvironmentData = environmentData;
+      environmentSelect.value = environmentRef.name;
+      renderPlatformOptions(environmentRef.name, environmentRef.platform);
+      selectionLabel.textContent = `${environmentRef.name} / ${environmentRef.platform}`;
+      packageCount.textContent = `${environmentData.packages.length}`;
+      environmentYamlLink.href = environmentData.environmentYamlUrl;
+      renderPackages();
+    }
+
+    async function loadEnvironment(environmentJsonUrl) {
+      if (environmentCache.has(environmentJsonUrl)) {
+        return environmentCache.get(environmentJsonUrl);
+      }
+
+      const response = await fetch(environmentJsonUrl);
+
+      if (!response.ok) {
+        throw new Error(`Failed to load ${environmentJsonUrl}`);
+      }
+
+      const environmentData = await response.json();
+      environmentCache.set(environmentJsonUrl, environmentData);
+      return environmentData;
+    }
+
+    async function syncSelection() {
+      const environmentName = environmentSelect.value;
+      const platformOptions = clientConfig.environmentIndex[environmentName] ?? [];
+
+      if (platformOptions.length === 0) {
+        packageBody.replaceChildren();
+        packageEmpty.hidden = false;
+        packageEmpty.classList.remove("error-state");
+        packageEmpty.textContent = `No environment data is available for ${environmentName}.`;
+        packageStatus.textContent = `No environment data available for ${environmentName}.`;
+        return;
+      }
+
+      const requestedPlatform = platformSelect.value;
+      const nextEnvironment =
+        platformOptions.find((option) => option.platform === requestedPlatform) ??
+        platformOptions[0];
+
+      renderPlatformOptions(environmentName, nextEnvironment.platform);
+      packageStatus.textContent = `Loading ${environmentName} / ${nextEnvironment.platform}…`;
+
+      try {
+        const environmentData = await loadEnvironment(nextEnvironment.environmentJsonUrl);
+        renderEnvironment(nextEnvironment, environmentData);
+      } catch (error) {
+        packageBody.replaceChildren();
+        packageEmpty.hidden = false;
+        packageEmpty.classList.add("error-state");
+        packageEmpty.textContent = `Could not load ${environmentName} / ${nextEnvironment.platform}.`;
+        packageStatus.textContent = `Failed to load ${environmentName} / ${nextEnvironment.platform}.`;
+        console.error(error);
+      }
+    }
+
+    environmentSelect.addEventListener("change", () => {
+      const nextOptions = clientConfig.environmentIndex[environmentSelect.value] ?? [];
+      renderPlatformOptions(environmentSelect.value, nextOptions[0]?.platform ?? "");
+      void syncSelection();
+    });
+
+    platformSelect.addEventListener("change", () => {
+      void syncSelection();
+    });
+
+    packageFilter.addEventListener("input", () => {
+      packageEmpty.classList.remove("error-state");
+      renderPackages();
+    });
+
+    renderEnvironment(clientConfig.initialEnvironment, initialEnvironmentData);
+  </script>
+</BaseLayout>
