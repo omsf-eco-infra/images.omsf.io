@@ -8,7 +8,7 @@ interface Props {
 
 const {
   title,
-  description = "Inspect local image fixtures, image JSON metadata, and per-environment package manifests.",
+  description = "Browse OMSF machine image releases, AMI IDs, Docker image URLs, and package summaries.",
 } = Astro.props;
 ---
 
@@ -24,13 +24,59 @@ const {
     <div class="page-shell">
       <header class="site-header">
         <a class="site-mark" href="/">
-          <span class="site-mark__eyebrow">Phase 1 Image Fixtures</span>
-          <strong>Image Viewer</strong>
+          <span class="site-mark__eyebrow">OMSF</span>
+          <strong>Machine Images</strong>
         </a>
       </header>
       <main class="page-content">
         <slot />
       </main>
     </div>
+    <script is:inline>
+      async function copyText(value) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(value);
+          return;
+        }
+
+        const textArea = document.createElement("textarea");
+        textArea.value = value;
+        textArea.setAttribute("readonly", "");
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.append(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+
+      for (const button of document.querySelectorAll("[data-copy-value]")) {
+        button.addEventListener("click", async () => {
+          if (!(button instanceof HTMLButtonElement)) {
+            return;
+          }
+
+          const value = button.dataset.copyValue;
+
+          if (!value) {
+            return;
+          }
+
+          try {
+            await copyText(value);
+            const label = button.textContent;
+            button.textContent = "Copied";
+            button.dataset.copied = "true";
+            window.setTimeout(() => {
+              button.textContent = label;
+              delete button.dataset.copied;
+            }, 1400);
+          } catch (error) {
+            button.textContent = "Error";
+            console.error(error);
+          }
+        });
+      }
+    </script>
   </body>
 </html>

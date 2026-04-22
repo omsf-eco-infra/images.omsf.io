@@ -4,71 +4,148 @@ import { SUMMARY_PACKAGES } from "../lib/config";
 import { formatTimestamp, listImageSummaries } from "../lib/image-data";
 
 const images = listImageSummaries();
+
+function formatDate(timestamp: string): string {
+  return timestamp.slice(0, 10);
+}
 ---
 
-<BaseLayout title="Image Viewer">
-  <section class="hero">
-    <span class="hero__eyebrow">Local Fixture Mode</span>
-    <h1>Published image builds, keyed by timestamp and package summary.</h1>
-    <p>
-      The landing page is driven by a checked-in global manifest that mirrors
-      the future D1 index and points to one image JSON file per image.
-    </p>
-    <div class="meta-strip">
-      <article class="stat">
-        <span class="stat__label">Sample Images</span>
-        <span class="stat__value">{images.length}</span>
-      </article>
-      <article class="stat">
-        <span class="stat__label">Summary Packages</span>
-        <span class="stat__value">{SUMMARY_PACKAGES.length}</span>
-      </article>
-      <article class="stat">
-        <span class="stat__label">JSON Layers</span>
-        <span class="stat__value">3</span>
-      </article>
-    </div>
-  </section>
-
+<BaseLayout title="OMSF Machine Images">
   <section class="panel">
-    <h2 class="section-title">Available Images</h2>
-    <p class="section-subtitle">
-      The table is sorted newest-first and uses the simplified global manifest
-      contract.
-    </p>
+    <h1 class="section-title">All Images ({images.length})</h1>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Timestamp</th>
+            <th class="timestamp-column">Date</th>
             <th>Image name</th>
             <th>AMI ID</th>
             <th>Docker image</th>
-            {SUMMARY_PACKAGES.map((packageName) => <th>{packageName}</th>)}
-            <th>Details</th>
+            <th>Key Versions</th>
           </tr>
         </thead>
         <tbody>
           {images.map((image) => (
             <tr>
-              <td>{formatTimestamp(image.timestamp)}</td>
+              <td
+                class="timestamp-cell"
+                title={formatTimestamp(image.timestamp)}
+              >
+                <time datetime={image.timestamp}>{formatDate(image.timestamp)}</time>
+              </td>
               <td>
                 <a class="image-link" href={`/images/${image.name}`}>
                   {image.name}
                 </a>
               </td>
-              <td class="mono">{image.amiId}</td>
-              <td class="mono">{image.dockerImage}</td>
-              {SUMMARY_PACKAGES.map((packageName) => (
-                <td>{image.packageVersions[packageName] ?? "—"}</td>
-              ))}
+              <td class="mono">
+                <span class="copy-field">
+                  <span class="copy-field__value">{image.amiId}</span>
+                  <button
+                    class="copy-button"
+                    type="button"
+                    data-copy-value={image.amiId}
+                    aria-label={`Copy AMI ID ${image.amiId}`}
+                  >
+                    Copy
+                  </button>
+                </span>
+              </td>
+              <td class="mono">
+                <span class="copy-field copy-field--wide">
+                  <span class="copy-field__value">{image.dockerImage}</span>
+                  <button
+                    class="copy-button"
+                    type="button"
+                    data-copy-value={image.dockerImage}
+                    aria-label={`Copy Docker image URL ${image.dockerImage}`}
+                  >
+                    Copy
+                  </button>
+                </span>
+              </td>
               <td>
-                <a href={`/images/${image.name}`}>Open</a>
+                <ul class="summary-package-list">
+                  {SUMMARY_PACKAGES.map((packageName) => (
+                    <li>
+                      <span class="summary-package-list__name">
+                        {packageName}
+                      </span>
+                      <span class="summary-package-list__version">
+                        {image.packageVersions[packageName] ?? "—"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+    </div>
+    <div class="mobile-image-list" aria-label="All images">
+      {images.map((image) => (
+        <article class="mobile-image-record">
+          <header class="mobile-image-record__header">
+            <a class="image-link" href={`/images/${image.name}`}>
+              {image.name}
+            </a>
+            <time
+              class="mobile-image-record__date"
+              datetime={image.timestamp}
+              title={formatTimestamp(image.timestamp)}
+            >
+              {formatDate(image.timestamp)}
+            </time>
+          </header>
+
+          <div class="mobile-image-record__field">
+            <span class="mobile-image-record__label">AMI ID</span>
+            <span class="copy-field">
+              <span class="copy-field__value mono">{image.amiId}</span>
+              <button
+                class="copy-button"
+                type="button"
+                data-copy-value={image.amiId}
+                aria-label={`Copy AMI ID ${image.amiId}`}
+              >
+                Copy
+              </button>
+            </span>
+          </div>
+
+          <div class="mobile-image-record__field">
+            <span class="mobile-image-record__label">Docker image</span>
+            <span class="copy-field">
+              <span class="copy-field__value mono">{image.dockerImage}</span>
+              <button
+                class="copy-button"
+                type="button"
+                data-copy-value={image.dockerImage}
+                aria-label={`Copy Docker image URL ${image.dockerImage}`}
+              >
+                Copy
+              </button>
+            </span>
+          </div>
+
+          <div class="mobile-image-record__field">
+            <span class="mobile-image-record__label">Key Versions</span>
+            <ul class="summary-package-list">
+              {SUMMARY_PACKAGES.map((packageName) => (
+                <li>
+                  <span class="summary-package-list__name">
+                    {packageName}
+                  </span>
+                  <span class="summary-package-list__version">
+                    {image.packageVersions[packageName] ?? "—"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
 </BaseLayout>

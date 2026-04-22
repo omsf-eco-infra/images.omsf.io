@@ -57,23 +57,42 @@ function packageField(value: string | null | undefined): string {
   <section class="hero">
     <span class="hero__eyebrow">Image Detail</span>
     <h1>{image.name}</h1>
-    <p>
-      Image metadata is loaded from a checked-in image JSON document, while
-      environment-specific package details are loaded from the linked
-      environment JSON file for the current selection.
-    </p>
-    <div class="meta-strip">
+    <div class="meta-strip image-meta-strip">
       <article class="stat">
         <span class="stat__label">Timestamp</span>
         <span class="stat__value">{formatTimestamp(image.timestamp)}</span>
       </article>
       <article class="stat">
         <span class="stat__label">AMI ID</span>
-        <span class="stat__value mono">{image.amiId}</span>
+        <span class="stat__value mono">
+          <span class="copy-field">
+            <span class="copy-field__value">{image.amiId}</span>
+            <button
+              class="copy-button"
+              type="button"
+              data-copy-value={image.amiId}
+              aria-label={`Copy AMI ID ${image.amiId}`}
+            >
+              Copy
+            </button>
+          </span>
+        </span>
       </article>
       <article class="stat">
         <span class="stat__label">Docker image</span>
-        <span class="stat__value mono">{image.dockerImage}</span>
+        <span class="stat__value mono">
+          <span class="copy-field copy-field--wide">
+            <span class="copy-field__value">{image.dockerImage}</span>
+            <button
+              class="copy-button"
+              type="button"
+              data-copy-value={image.dockerImage}
+              aria-label={`Copy Docker image URL ${image.dockerImage}`}
+            >
+              Copy
+            </button>
+          </span>
+        </span>
       </article>
       <article class="stat">
         <span class="stat__label">pixi.lock</span>
@@ -87,10 +106,7 @@ function packageField(value: string | null | undefined): string {
   </section>
 
   <section class="panel">
-    <h2 class="section-title">Environment controls</h2>
-    <p class="section-subtitle">
-      Environment and platform options are loaded from the image JSON file.
-    </p>
+    <h2 class="section-title">Environment</h2>
     <div class="control-grid">
       <div class="control">
         <label for="environment-select">Environment</label>
@@ -131,11 +147,11 @@ function packageField(value: string | null | undefined): string {
     <div class="link-row">
       <a
         class="pill-link"
-        id="environment-yaml-link"
-        href={initialEnvironmentData.environmentYamlUrl}
+        id="conda-explicit-spec-link"
+        href={initialEnvironmentData.condaExplicitSpecUrl}
         download
       >
-        Download environment.yaml
+        Download conda spec
       </a>
     </div>
   </section>
@@ -172,7 +188,7 @@ function packageField(value: string | null | undefined): string {
     <p class="empty-state" id="package-empty" hidden>
       No packages match the current filter.
     </p>
-    <div class="table-wrap">
+    <div class="table-wrap package-table-wrap">
       <table>
         <thead>
           <tr>
@@ -194,6 +210,27 @@ function packageField(value: string | null | undefined): string {
         </tbody>
       </table>
     </div>
+    <div class="package-card-list" id="package-card-list">
+      {initialPackages.map((pkg: InstalledPackage) => (
+        <article class="package-card">
+          <h3 class="package-card__name">{pkg.name}</h3>
+          <dl class="package-card__fields">
+            <div>
+              <dt>Version</dt>
+              <dd>{pkg.version}</dd>
+            </div>
+            <div>
+              <dt>Build ID</dt>
+              <dd>{packageField(pkg.buildId)}</dd>
+            </div>
+            <div>
+              <dt>Source</dt>
+              <dd>{pkg.source}</dd>
+            </div>
+          </dl>
+        </article>
+      ))}
+    </div>
   </section>
 
   <script
@@ -206,9 +243,12 @@ function packageField(value: string | null | undefined): string {
     const packageStatus = document.querySelector("#package-status");
     const packageEmpty = document.querySelector("#package-empty");
     const packageBody = document.querySelector("#package-table-body");
+    const packageCardList = document.querySelector("#package-card-list");
     const packageCount = document.querySelector("#package-count");
     const selectionLabel = document.querySelector("#selection-label");
-    const environmentYamlLink = document.querySelector("#environment-yaml-link");
+    const condaExplicitSpecLink = document.querySelector(
+      "#conda-explicit-spec-link",
+    );
 
     if (
       !(environmentSelect instanceof HTMLSelectElement) ||
@@ -217,9 +257,10 @@ function packageField(value: string | null | undefined): string {
       !(packageStatus instanceof HTMLParagraphElement) ||
       !(packageEmpty instanceof HTMLParagraphElement) ||
       !(packageBody instanceof HTMLTableSectionElement) ||
+      !(packageCardList instanceof HTMLElement) ||
       !(packageCount instanceof HTMLElement) ||
       !(selectionLabel instanceof HTMLElement) ||
-      !(environmentYamlLink instanceof HTMLAnchorElement)
+      !(condaExplicitSpecLink instanceof HTMLAnchorElement)
     ) {
       throw new Error("Image detail page controls could not be initialized.");
     }
@@ -261,6 +302,7 @@ function packageField(value: string | null | undefined): string {
             );
 
       packageBody.replaceChildren();
+      packageCardList.replaceChildren();
       packageEmpty.classList.remove("error-state");
 
       if (packages.length === 0) {
@@ -292,6 +334,35 @@ function packageField(value: string | null | undefined): string {
         }
 
         packageBody.append(row);
+
+        const card = document.createElement("article");
+        card.className = "package-card";
+
+        const name = document.createElement("h3");
+        name.className = "package-card__name";
+        name.textContent = pkg.name;
+        card.append(name);
+
+        const fields = document.createElement("dl");
+        fields.className = "package-card__fields";
+        const fieldValues = [
+          ["Version", pkg.version],
+          ["Build ID", formatCell(pkg.buildId)],
+          ["Source", pkg.source],
+        ];
+
+        for (const [label, value] of fieldValues) {
+          const field = document.createElement("div");
+          const term = document.createElement("dt");
+          const description = document.createElement("dd");
+          term.textContent = label;
+          description.textContent = value;
+          field.append(term, description);
+          fields.append(field);
+        }
+
+        card.append(fields);
+        packageCardList.append(card);
       }
     }
 
@@ -302,7 +373,7 @@ function packageField(value: string | null | undefined): string {
       renderPlatformOptions(environmentRef.name, environmentRef.platform);
       selectionLabel.textContent = `${environmentRef.name} / ${environmentRef.platform}`;
       packageCount.textContent = `${environmentData.packages.length}`;
-      environmentYamlLink.href = environmentData.environmentYamlUrl;
+      condaExplicitSpecLink.href = environmentData.condaExplicitSpecUrl;
       renderPackages();
     }
 
@@ -328,6 +399,7 @@ function packageField(value: string | null | undefined): string {
 
       if (platformOptions.length === 0) {
         packageBody.replaceChildren();
+        packageCardList.replaceChildren();
         packageEmpty.hidden = false;
         packageEmpty.classList.remove("error-state");
         packageEmpty.textContent = `No environment data is available for ${environmentName}.`;
