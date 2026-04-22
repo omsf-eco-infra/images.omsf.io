@@ -43,7 +43,7 @@ export const ImageSchema = ImageSummarySchema.extend({
 
 export const EnvironmentSchema = z
   .object({
-    environmentYamlUrl: NonEmptyString,
+    condaExplicitSpecUrl: NonEmptyString,
     packages: z.array(InstalledPackageSchema),
   })
   .strict();

@@ -115,12 +115,12 @@ describe("EnvironmentSchema", () => {
     }
   });
 
-  it("rejects environments without environmentYamlUrl", () => {
+  it("rejects environments without condaExplicitSpecUrl", () => {
     const invalidEnvironment = structuredClone(
       openfeTestEnvironmentJson,
     ) as Record<string, unknown>;
 
-    delete invalidEnvironment.environmentYamlUrl;
+    delete invalidEnvironment.condaExplicitSpecUrl;
 
     expect(() => EnvironmentSchema.parse(invalidEnvironment)).toThrow();
   });

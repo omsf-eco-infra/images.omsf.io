@@ -11,7 +11,7 @@ Each published image can have:
 - a Docker image reference
 - a raw `pixi.lock`
 - one or more environment/platform combinations
-- one `environment.yaml` per environment/platform combination
+- one Pixi-generated conda explicit spec per environment/platform combination
 
 The website should stay simple. The image-building repository should generate
 the JSON consumed here.
@@ -36,7 +36,7 @@ For MVP, the viewer contract is a simple three-level JSON model:
 3. **Environment JSON**
    - one JSON file per environment/platform pair
    - used to render the package list for the current selection
-   - includes `environmentYamlUrl` and the installed package list
+   - includes `condaExplicitSpecUrl` and the installed package list
 
 This repo owns the viewer, fixtures, schemas, and tests for that contract.
 
@@ -104,7 +104,7 @@ public/artifacts/<image-name>/<environment>-<platform>.json
 
 Each environment JSON contains:
 
-- `environmentYamlUrl`
+- `condaExplicitSpecUrl`
 - `packages`
 
 Each package contains:
@@ -150,7 +150,7 @@ It should show:
 When the current selection changes, the page should fetch the linked
 environment JSON and use that to render:
 
-- the current `environment.yaml` link
+- the current conda explicit spec link
 - the package table
 - the package count
 
@@ -165,7 +165,7 @@ manifest.json
 lockfiles/<image-name>.pixi.lock
 artifacts/<image-name>/image.json
 artifacts/<image-name>/<environment>-<platform>.json
-artifacts/<image-name>/<environment>-<platform>/<environment>-<platform>.environment.yaml
+artifacts/<image-name>/<environment>-<platform>/<environment>-<platform>.conda-spec.txt
 ```
 
 This keeps the viewer contract file-based and simple.
@@ -182,7 +182,7 @@ The producer repo should own:
 - collecting image metadata
 - capturing the AMI ID and Docker image
 - generating the global manifest, image JSON, and environment JSON
-- generating or copying the matching `environment.yaml`
+- generating or copying the matching Pixi conda explicit spec
 - uploading all files to R2
 - updating the manifest last
 - triggering a site rebuild after publish
