@@ -126,6 +126,13 @@ resource "github_actions_secret" "publisher_images_d1_database_id" {
   plaintext_value = cloudflare_d1_database.images.id
 }
 
+resource "github_actions_variable" "publisher_images_d1_database_name" {
+  provider      = github.publisher
+  repository    = data.github_repository.publisher.name
+  variable_name = "IMAGES_D1_DATABASE_NAME"
+  value         = cloudflare_d1_database.images.name
+}
+
 resource "github_actions_secret" "publisher_images_r2_parent_access_key_id" {
   provider        = github.publisher
   repository      = data.github_repository.publisher.name

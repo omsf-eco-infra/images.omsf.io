@@ -61,9 +61,24 @@ The publisher repository receives:
 - `CLOUDFLARE_API_TOKEN`
 - `IMAGES_R2_BUCKET`
 - `IMAGES_D1_DATABASE_ID`
+- `IMAGES_D1_DATABASE_NAME`
 - `IMAGES_R2_PARENT_ACCESS_KEY_ID`
 
 The D1 database and R2 bucket are intentionally empty in this phase.
+
+## D1 schema migrations
+
+The website repository owns stable D1 schema migrations in `migrations/`.
+Publisher workflows should write image rows and upload R2 artifacts, but should
+not create or alter schema.
+
+Apply schema changes with the manual "Apply D1 migrations" GitHub Actions
+workflow, or run Wrangler from the repository root:
+
+```bash
+npx wrangler d1 migrations list images-eco-infra-index --remote
+npx wrangler d1 migrations apply images-eco-infra-index --remote
+```
 
 ## Provider version
 
