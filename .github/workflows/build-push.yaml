@@ -1,0 +1,42 @@
+name: Build Astro site from push
+
+on: 
+  push:
+    branches:
+      - main
+  # SCHEDULE AND WORKFLOW DISPATCH ARE FOR TESTING
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+env:
+  ASTRO_SOURCE_DIR: "."
+  ASTRO_BASE_URL: ""
+  ASTRO_OUTPUT_DIR: "dist"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Build site
+        uses: omsf/static-site-tools/build/astro@main
+        #uses: ./build/astro  # dev
+        with:
+          base-url: ${{ env.ASTRO_BASE_URL }}
+          source-directory: ${{ env.ASTRO_SOURCE_DIR }}
+
+      - name: Make artifact
+        shell: bash
+        run: tar czf site.tar.gz -C ${{ env.ASTRO_SOURCE_DIR }} ${{ env.ASTRO_OUTPUT_DIR }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-build
+          path: site.tar.gz
+          if-no-files-found: error
+          retention-days: 1
