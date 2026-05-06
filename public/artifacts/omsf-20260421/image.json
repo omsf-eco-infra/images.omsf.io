@@ -1,0 +1,35 @@
+{
+  "name": "omsf-20260421",
+  "timestamp": "2026-04-21T21:04:17Z",
+  "amiId": "ami-local-demo",
+  "dockerImage": "ghcr.io/omsf-eco-infra/omsf:20260421",
+  "packageVersions": {
+    "OpenFold": null,
+    "OpenFE": "1.10.0",
+    "OpenFF-Toolkit": "0.18.0"
+  },
+  "imageJsonUrl": "/artifacts/omsf-20260421/image.json",
+  "pixiLockUrl": "/lockfiles/omsf-20260421.pixi.lock",
+  "environments": [
+    {
+      "name": "omsf",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260421/omsf-linux-64.json"
+    },
+    {
+      "name": "omsf-test",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260421/omsf-test-linux-64.json"
+    },
+    {
+      "name": "openfe",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260421/openfe-linux-64.json"
+    },
+    {
+      "name": "openfe-test",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260421/openfe-test-linux-64.json"
+    }
+  ]
+}

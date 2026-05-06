@@ -6,8 +6,8 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { describe, expect, it } from "vitest";
 import manifestJson from "../data/manifest.json";
-import openfeImageJson from "../../public/artifacts/openfe-2026-04-03/image.json";
-import openfeTestEnvironmentJson from "../../public/artifacts/openfe-2026-04-03/openfe-test-linux-64.json";
+import omsfImageJson from "../../public/artifacts/omsf-20260421/image.json";
+import omsfTestEnvironmentJson from "../../public/artifacts/omsf-20260421/openfe-test-linux-64.json";
 import {
   EnvironmentSchema,
   GlobalManifestSchema,
@@ -38,7 +38,7 @@ describe("GlobalManifestSchema", () => {
   it("validates the checked-in manifest fixture", () => {
     const manifest = GlobalManifestSchema.parse(manifestJson);
 
-    expect(manifest).toHaveLength(2);
+    expect(manifest).toHaveLength(3);
   });
 
   it("rejects unknown extra keys on manifest records", () => {
@@ -82,7 +82,7 @@ describe("ImageSchema", () => {
   });
 
   it("rejects image JSON without pixiLockUrl", () => {
-    const invalidImage = structuredClone(openfeImageJson) as Record<string, unknown>;
+    const invalidImage = structuredClone(omsfImageJson) as Record<string, unknown>;
 
     delete invalidImage.pixiLockUrl;
 
@@ -90,7 +90,7 @@ describe("ImageSchema", () => {
   });
 
   it("rejects environment entries without environmentJsonUrl", () => {
-    const invalidImage = structuredClone(openfeImageJson) as Record<string, unknown>;
+    const invalidImage = structuredClone(omsfImageJson) as Record<string, unknown>;
     const environments = invalidImage.environments as Array<Record<string, unknown>>;
 
     delete environments[0].environmentJsonUrl;
@@ -117,7 +117,7 @@ describe("EnvironmentSchema", () => {
 
   it("rejects environments without condaExplicitSpecUrl", () => {
     const invalidEnvironment = structuredClone(
-      openfeTestEnvironmentJson,
+      omsfTestEnvironmentJson,
     ) as Record<string, unknown>;
 
     delete invalidEnvironment.condaExplicitSpecUrl;
@@ -127,7 +127,7 @@ describe("EnvironmentSchema", () => {
 
   it("rejects packages without source", () => {
     const invalidEnvironment = structuredClone(
-      openfeTestEnvironmentJson,
+      omsfTestEnvironmentJson,
     ) as Record<string, unknown>;
     const packages = invalidEnvironment.packages as Array<Record<string, unknown>>;
 
@@ -138,7 +138,7 @@ describe("EnvironmentSchema", () => {
 
   it("accepts buildId set to null", () => {
     const validEnvironment = structuredClone(
-      openfeTestEnvironmentJson,
+      omsfTestEnvironmentJson,
     ) as Record<string, unknown>;
     const packages = validEnvironment.packages as Array<Record<string, unknown>>;
 
@@ -149,7 +149,7 @@ describe("EnvironmentSchema", () => {
 
   it("rejects omitted buildId", () => {
     const invalidEnvironment = structuredClone(
-      openfeTestEnvironmentJson,
+      omsfTestEnvironmentJson,
     ) as Record<string, unknown>;
     const packages = invalidEnvironment.packages as Array<Record<string, unknown>>;
 
@@ -160,7 +160,7 @@ describe("EnvironmentSchema", () => {
 
   it("rejects unknown extra keys on strict objects", () => {
     const invalidEnvironment = structuredClone(
-      openfeTestEnvironmentJson,
+      omsfTestEnvironmentJson,
     ) as Record<string, unknown>;
     const packages = invalidEnvironment.packages as Array<Record<string, unknown>>;
 

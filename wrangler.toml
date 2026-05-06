@@ -1,0 +1,8 @@
+name = "images-eco-infra"
+compatibility_date = "2026-04-01"
+
+[[d1_databases]]
+binding = "IMAGES_DB"
+database_name = "images-eco-infra-index"
+database_id = "bbc89cae-0888-4ad5-8eeb-7c8197fb7aa6"
+migrations_dir = "migrations"

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "omsf-20260421",
+    "timestamp": "2026-04-21T21:04:17Z",
+    "amiId": "ami-local-demo",
+    "dockerImage": "ghcr.io/omsf-eco-infra/omsf:20260421",
+    "packageVersions": {
+      "OpenFold": null,
+      "OpenFE": "1.10.0",
+      "OpenFF-Toolkit": "0.18.0"
+    },
+    "imageJsonUrl": "/artifacts/omsf-20260421/image.json"
+  },
+  {
+    "name": "omsf-20260501",
+    "timestamp": "2026-05-01T13:22:27Z",
+    "amiId": "ami-0d17550010c819c8f",
+    "dockerImage": "ghcr.io/omsf-eco-infra/omsf:20260501",
+    "packageVersions": {
+      "OpenFE": "1.11.0",
+      "OpenFF-Toolkit": "0.18.0",
+      "OpenFold": "0.4.1"
+    },
+    "imageJsonUrl": "/artifacts/omsf-20260501/image.json"
+  },
+  {
+    "name": "omsf-20260504",
+    "timestamp": "2026-05-04T14:11:02Z",
+    "amiId": "ami-0144893a0c720ee0c",
+    "dockerImage": "ghcr.io/omsf-eco-infra/omsf:20260504",
+    "packageVersions": {
+      "OpenFE": "1.11.1",
+      "OpenFF-Toolkit": "0.18.0",
+      "OpenFold": "0.4.1"
+    },
+    "imageJsonUrl": "/artifacts/omsf-20260504/image.json"
+  }
+]
