@@ -1,4 +1,16 @@
 [
+{
+  "name": "omsf-latest",
+  "timestamp": "2026-06-16T00:00:00Z",
+  "amiId": "ami-01ff28330f58f7088",
+  "dockerImage": "ghcr.io/omsf-eco-infra/omsf:latest",
+  "packageVersions": {
+    "OpenFE": "1.11.1",
+    "OpenFF-Toolkit": "0.18.1",
+    "OpenFold": "0.4.1"
+  },
+  "imageJsonUrl": "/artifacts/omsf-latest/image.json"
+},
   {
     "name": "omsf-20260421",
     "timestamp": "2026-04-21T21:04:17Z",
