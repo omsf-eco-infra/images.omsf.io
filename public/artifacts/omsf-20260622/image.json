@@ -1,8 +1,8 @@
 {
   "name": "omsf-20260622",
   "timestamp": "2026-06-22T00:00:00Z",
-  "amiId": "ami-01ff28330f58f7088",
-  "dockerImage": "ghcr.io/omsf-eco-infra/omsf:20260622",
+  "amiId": "ami-00ebad361bf40e06f",
+  "dockerImage": "ghcr.io/omsf-eco-infra/omsf:latest",
   "packageVersions": {
     "OpenFE": "1.11.1",
     "OpenFF-Toolkit": "0.18.1",
