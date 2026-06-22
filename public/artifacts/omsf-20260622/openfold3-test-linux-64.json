@@ -1,5 +1,5 @@
 {
-  "condaExplicitSpecUrl": "/artifacts/omsf-latest/openfold3-linux-64/openfold3-linux-64.conda-spec.txt",
+  "environmentYamlUrl": "/artifacts/omsf-20260622/openfold3-test-linux-64/openfold3-test-linux-64.environment.yaml",
   "packages": [
     {
       "name": "_openmp_mutex",
@@ -23,6 +23,12 @@
       "name": "aria2",
       "version": "1.37.0",
       "buildId": "h4b33fff_4",
+      "source": "conda"
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0",
+      "buildId": "pyhcf101f3_0",
       "source": "conda"
     },
     {
@@ -218,6 +224,12 @@
       "source": "conda"
     },
     {
+      "name": "coverage",
+      "version": "7.14.1",
+      "buildId": "py313h3dea7bd_0",
+      "source": "conda"
+    },
+    {
       "name": "cpython",
       "version": "3.13.14",
       "buildId": "py313hd8ed1ab_100",
@@ -380,6 +392,12 @@
       "source": "conda"
     },
     {
+      "name": "debugpy",
+      "version": "1.8.21",
+      "buildId": "py313h5d5ffb9_0",
+      "source": "conda"
+    },
+    {
       "name": "deepspeed",
       "version": "0.17.6",
       "buildId": "cpu_py313h7c96373_0",
@@ -406,6 +424,18 @@
     {
       "name": "einops",
       "version": "0.8.2",
+      "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
+      "name": "exceptiongroup",
+      "version": "1.3.1",
+      "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
+      "name": "execnet",
+      "version": "2.1.2",
       "buildId": "pyhd8ed1ab_0",
       "source": "conda"
     },
@@ -580,6 +610,12 @@
     {
       "name": "ijson",
       "version": "3.5.0",
+      "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.0",
       "buildId": "pyhd8ed1ab_0",
       "source": "conda"
     },
@@ -1070,6 +1106,12 @@
       "source": "conda"
     },
     {
+      "name": "multidict",
+      "version": "6.7.1",
+      "buildId": "py313h3dea7bd_0",
+      "source": "conda"
+    },
+    {
       "name": "munkres",
       "version": "1.1.4",
       "buildId": "pyhd8ed1ab_1",
@@ -1220,9 +1262,21 @@
       "source": "conda"
     },
     {
+      "name": "pluggy",
+      "version": "1.6.0",
+      "buildId": "pyhf9edf01_1",
+      "source": "conda"
+    },
+    {
       "name": "prompt-toolkit",
       "version": "3.0.51",
       "buildId": "pyha770c72_0",
+      "source": "conda"
+    },
+    {
+      "name": "propcache",
+      "version": "0.5.2",
+      "buildId": "py313h3dea7bd_0",
       "source": "conda"
     },
     {
@@ -1286,6 +1340,12 @@
       "source": "conda"
     },
     {
+      "name": "pygments",
+      "version": "2.20.0",
+      "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
       "name": "pyparsing",
       "version": "3.3.2",
       "buildId": "pyhcf101f3_0",
@@ -1295,6 +1355,48 @@
       "name": "pysocks",
       "version": "1.7.1",
       "buildId": "pyha55dd90_7",
+      "source": "conda"
+    },
+    {
+      "name": "pytest",
+      "version": "9.0.3",
+      "buildId": "pyhc364b38_1",
+      "source": "conda"
+    },
+    {
+      "name": "pytest-benchmark",
+      "version": "5.2.3",
+      "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
+      "name": "pytest-cov",
+      "version": "7.1.0",
+      "buildId": "pyhcf101f3_0",
+      "source": "conda"
+    },
+    {
+      "name": "pytest-datadir",
+      "version": "1.8.0",
+      "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
+      "name": "pytest-recording",
+      "version": "0.13.4",
+      "buildId": "pyhe01879c_1",
+      "source": "conda"
+    },
+    {
+      "name": "pytest-regressions",
+      "version": "2.11.0",
+      "buildId": "pyhc455866_0",
+      "source": "conda"
+    },
+    {
+      "name": "pytest-xdist",
+      "version": "3.8.0",
+      "buildId": "pyhd8ed1ab_0",
       "source": "conda"
     },
     {
@@ -1400,6 +1502,12 @@
       "source": "conda"
     },
     {
+      "name": "ruff",
+      "version": "0.15.17",
+      "buildId": "h6a952e8_0",
+      "source": "conda"
+    },
+    {
       "name": "s2n",
       "version": "1.7.2",
       "buildId": "hc5a330e_1",
@@ -1472,6 +1580,12 @@
       "source": "conda"
     },
     {
+      "name": "tomli",
+      "version": "2.4.1",
+      "buildId": "pyhcf101f3_0",
+      "source": "conda"
+    },
+    {
       "name": "torchmetrics",
       "version": "1.9.0",
       "buildId": "pyhd8ed1ab_0",
@@ -1520,6 +1634,12 @@
       "source": "conda"
     },
     {
+      "name": "vcrpy",
+      "version": "8.1.1",
+      "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
       "name": "wandb",
       "version": "0.27.2",
       "buildId": "py313h843e2db_0",
@@ -1529,6 +1649,12 @@
       "name": "wcwidth",
       "version": "0.2.14",
       "buildId": "pyhd8ed1ab_0",
+      "source": "conda"
+    },
+    {
+      "name": "wrapt",
+      "version": "2.2.1",
+      "buildId": "py313h07c4f96_0",
       "source": "conda"
     },
     {
@@ -1583,6 +1709,12 @@
       "name": "yaml",
       "version": "0.2.5",
       "buildId": "h280c20c_3",
+      "source": "conda"
+    },
+    {
+      "name": "yarl",
+      "version": "1.24.2",
+      "buildId": "py313h3dea7bd_0",
       "source": "conda"
     },
     {

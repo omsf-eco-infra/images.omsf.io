@@ -1,5 +1,5 @@
 {
-  "condaExplicitSpecUrl": "/artifacts/omsf-latest/omsf-test-linux-64/omsf-test-linux-64.conda-spec.txt",
+  "environmentYamlUrl": "/artifacts/omsf-20260622/omsf-test-linux-64/omsf-test-linux-64.environment.yaml",
   "packages": [
     {
       "name": "_openmp_mutex",
