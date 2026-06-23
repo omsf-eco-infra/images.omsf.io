@@ -1,5 +1,5 @@
 {
-  "environmentYamlUrl": "/artifacts/omsf-20260622/openfold3-linux-64/openfold3-linux-64.environment.yaml",
+  "condaExplicitSpecUrl": "/artifacts/omsf-20260622/openfold3-linux-64/openfold3-linux-64.environment.yaml",
   "packages": [
     {
       "name": "_openmp_mutex",
