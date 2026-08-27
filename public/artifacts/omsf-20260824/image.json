@@ -1,0 +1,45 @@
+{
+  "name": "omsf-20260824",
+  "timestamp": "2026-08-24T12:55:58Z",
+  "amiId": "ami-04ceb330bd48c203e",
+  "dockerImage": "ghcr.io/omsf-eco-infra/omsf:20260824",
+  "packageVersions": {
+    "OpenFE": "1.12.0",
+    "OpenFF-Toolkit": "0.18.1",
+    "OpenFold": "0.5.0"
+  },
+  "imageJsonUrl": "/artifacts/omsf-20260824/image.json",
+  "pixiLockUrl": "/lockfiles/omsf-20260824.pixi.lock",
+  "environments": [
+    {
+      "name": "omsf",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260824/omsf-linux-64.json"
+    },
+    {
+      "name": "omsf-test",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260824/omsf-test-linux-64.json"
+    },
+    {
+      "name": "openfe",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260824/openfe-linux-64.json"
+    },
+    {
+      "name": "openfe-test",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260824/openfe-test-linux-64.json"
+    },
+    {
+      "name": "openfold3",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260824/openfold3-linux-64.json"
+    },
+    {
+      "name": "openfold3-test",
+      "platform": "linux-64",
+      "environmentJsonUrl": "/artifacts/omsf-20260824/openfold3-test-linux-64.json"
+    }
+  ]
+}

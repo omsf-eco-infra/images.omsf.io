@@ -46,5 +46,17 @@
       "OpenFold": "0.4.1"
     },
     "imageJsonUrl": "/artifacts/omsf-20260504/image.json"
+  },
+  {
+    "name": "omsf-20260824",
+    "timestamp": "2026-08-24T12:55:58Z",
+    "amiId": "ami-04ceb330bd48c203e",
+    "dockerImage": "ghcr.io/omsf-eco-infra/omsf:20260824",
+    "packageVersions": {
+      "OpenFE": "1.12.0",
+      "OpenFF-Toolkit": "0.18.1",
+      "OpenFold": "0.5.0"
+    },
+    "imageJsonUrl": "/artifacts/omsf-20260824/image.json"
   }
 ]
